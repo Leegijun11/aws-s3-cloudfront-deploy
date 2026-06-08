@@ -7,7 +7,8 @@ export const checkDuplicate = createAsyncThunk(
     async ({ login_id, nickname }, { rejectWithValue }) => {
         try {
             const params = login_id ? { login_id } : { nickname };
-            const res = await api.get("/users/check-duplicate/", { params });
+            // 💡 끝에 붙어있던 슬래싱(/)을 지우고 깔끔하게 매pping합니다.
+            const res = await api.get("/users/check-duplicate", { params }); 
             return res.data; 
         } catch (err) {
             return rejectWithValue(err.response?.data?.detail || "중복 확인 중 오류 발생");
@@ -16,6 +17,7 @@ export const checkDuplicate = createAsyncThunk(
 );
 
 export const fetchUser = createAsyncThunk("user/fetchUser", async () => {
+    // 💡 /users/me 구조도 정석적입니다. 그대로 유지하되 끝에 슬래시가 없는 상태입니다.
     const res = await api.get("/users/me");
     return res.data;
 });
@@ -34,6 +36,8 @@ export const deleteUser = createAsyncThunk("user/deleteUser", async (password) =
     const res = await api.delete("/users", { data: { password } });
     return res.data;
 });
+
+// ... 아래 userSlice 선언 및 extraReducers 로직은 기존과 완전히 동일하므로 생략합니다.
 const userSlice = createSlice({
     name: 'user',
     initialState: {
